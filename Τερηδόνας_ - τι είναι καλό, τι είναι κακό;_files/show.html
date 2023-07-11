@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)https://learningapps.org/tools/86/28/watch?id=przwpc08k20 -->
+<html lang="de" data-lt-installed="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css">.ui-draggable {-ms-touch-action:none;}</style>
+  
+  
+<!-- Matomo -->
+<script async="" src="./matomo.js"></script><script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(["trackPageView"]);
+  _paq.push(["enableLinkTracking"]);
+  (function() {
+    var u="//analytics.learningapps.org/";
+    _paq.push(["setTrackerUrl", u+"matomo.php"]);
+    _paq.push(["setSiteId", "1"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];
+    g.async=true; g.src=u+"matomo.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script type="text/javascript" src="./data"></script><script>/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+
+;// CONCATENATED MODULE: ../core/dist/flash-identifiers.js
+const FLASH_MIMETYPE = "application/x-shockwave-flash";
+const FUTURESPLASH_MIMETYPE = "application/futuresplash";
+const FLASH7_AND_8_MIMETYPE = "application/x-shockwave-flash2-preview";
+const FLASH_MOVIE_MIMETYPE = "application/vnd.adobe.flash.movie";
+const FLASH_ACTIVEX_CLASSID = "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000";
+
+;// CONCATENATED MODULE: ../core/dist/plugin-polyfill.js
+
+/**
+ * Replacement object for `MimeTypeArray` that lets us install new fake mime
+ * types.
+ *
+ * Unlike plugins we can at least enumerate mime types in Firefox, so we don't
+ * lose data.
+ *
+ * We also expose a method called `install` which adds a new plugin. This is
+ * used to falsify Flash detection. If the existing `navigator.mimeTypes` has an
+ * `install` method, you should not use `RuffleMimeTypeArray` as some other
+ * plugin emulator is already present.
+ */
+class RuffleMimeTypeArray {
+    constructor(mimeTypes) {
+        this.__mimeTypes = [];
+        this.__namedMimeTypes = {};
+        if (mimeTypes) {
+            for (let i = 0; i < mimeTypes.length; i++) {
+                this.install(mimeTypes[i]);
+            }
+        }
+    }
+    /**
+     * Install a MIME Type into the array.
+     *
+     * @param mimeType The mime type to install
+     */
+    install(mimeType) {
+        const index = this.__mimeTypes.length;
+        this.__mimeTypes.push(mimeType);
+        this.__namedMimeTypes[mimeType.type] = mimeType;
+        this[mimeType.type] = mimeType;
+        this[index] = mimeType;
+    }
+    item(index) {
+        // This behavior is done to emulate a 32-bit uint,
+        // which browsers use.
+        return this.__mimeTypes[index >>> 0];
+    }
+    namedItem(name) {
+        return this.__namedMimeTypes[name];
+    }
+    get length() {
+        return this.__mimeTypes.length;
+    }
+    [Symbol.iterator]() {
+        return this.__mimeTypes[Symbol.iterator]();
+    }
+}
+/**
+ * Equivalent object to `Plugin` that allows us to falsify plugins.
+ */
+class RufflePlugin extends RuffleMimeTypeArray {
+    constructor(name, description, filename) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.filename = filename;
+    }
+}
+/**
+ * Replacement object for `PluginArray` that lets us install new fake plugins.
+ *
+ * This object needs to wrap the native plugin array, since the user might have
+ * actual plugins installed. Firefox doesn't let us enumerate the array, though,
+ * which has some consequences. Namely, we can't actually perfectly wrap the
+ * native plugin array, at least unless there's some secret "unresolved object
+ * property name handler" that I've never known before in JS...
+ *
+ * We can still wrap `namedItem` perfectly at least.
+ *
+ * We also expose a method called `install` which adds a new plugin. This is
+ * used to falsify Flash detection. If the existing `navigator.plugins` has an
+ * `install` method, you should not use `RufflePluginArray` as some other plugin
+ * emulator is already present.
+ */
+class RufflePluginArray {
+    constructor(plugins) {
+        this.__plugins = [];
+        this.__namedPlugins = {};
+        for (let i = 0; i < plugins.length; i++) {
+            this.install(plugins[i]);
+        }
+    }
+    install(plugin) {
+        const index = this.__plugins.length;
+        this.__plugins.push(plugin);
+        this.__namedPlugins[plugin.name] = plugin;
+        this[plugin.name] = plugin;
+        this[index] = plugin;
+    }
+    item(index) {
+        // This behavior is done to emulate a 32-bit uint,
+        // which browsers use. Cloudflare's anti-bot
+        // checks rely on this.
+        return this.__plugins[index >>> 0];
+    }
+    namedItem(name) {
+        return this.__namedPlugins[name];
+    }
+    refresh() {
+        // Nothing to do, we just need to define the method.
+    }
+    [Symbol.iterator]() {
+        return this.__plugins[Symbol.iterator]();
+    }
+    get length() {
+        return this.__plugins.length;
+    }
+}
+/**
+ * A fake plugin designed to trigger Flash detection scripts.
+ */
+const FLASH_PLUGIN = new RufflePlugin("Shockwave Flash", "Shockwave Flash 32.0 r0", "ruffle.js");
+/**
+ * A fake plugin designed to allow early detection of if the Ruffle extension is in use.
+ */
+const RUFFLE_EXTENSION = new RufflePlugin("Ruffle Extension", "Ruffle Extension", "ruffle.js");
+FLASH_PLUGIN.install({
+    type: FUTURESPLASH_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "spl",
+    enabledPlugin: FLASH_PLUGIN,
+});
+FLASH_PLUGIN.install({
+    type: FLASH_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "swf",
+    enabledPlugin: FLASH_PLUGIN,
+});
+FLASH_PLUGIN.install({
+    type: FLASH7_AND_8_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "swf",
+    enabledPlugin: FLASH_PLUGIN,
+});
+FLASH_PLUGIN.install({
+    type: FLASH_MOVIE_MIMETYPE,
+    description: "Shockwave Flash",
+    suffixes: "swf",
+    enabledPlugin: FLASH_PLUGIN,
+});
+RUFFLE_EXTENSION.install({
+    type: "",
+    description: "Ruffle Detection",
+    suffixes: "",
+    enabledPlugin: RUFFLE_EXTENSION,
+});
+/**
+ * Install a fake plugin such that detectors will see it in `navigator.plugins`.
+ *
+ * This function takes care to check if the existing implementation of
+ * `navigator.plugins` already accepts fake plugin entries. If so, it will use
+ * that version of the plugin array. This allows the plugin polyfill to compose
+ * across multiple plugin emulators with the first emulator's polyfill winning.
+ *
+ * @param plugin The plugin to install
+ */
+function installPlugin(plugin) {
+    if (!("install" in navigator.plugins) || !navigator.plugins["install"]) {
+        Object.defineProperty(navigator, "plugins", {
+            value: new RufflePluginArray(navigator.plugins),
+            writable: false,
+        });
+    }
+    const plugins = navigator.plugins;
+    plugins.install(plugin);
+    if (plugin.length > 0 &&
+        (!("install" in navigator.mimeTypes) || !navigator.mimeTypes["install"])) {
+        Object.defineProperty(navigator, "mimeTypes", {
+            value: new RuffleMimeTypeArray(navigator.mimeTypes),
+            writable: false,
+        });
+    }
+    const mimeTypes = navigator.mimeTypes;
+    for (let i = 0; i < plugin.length; i += 1) {
+        mimeTypes.install(plugin[i]);
+    }
+}
+
+;// CONCATENATED MODULE: ./src/plugin-polyfill.ts
+// This file is compiled and then injected into content.ts's compiled form.
+
+installPlugin(FLASH_PLUGIN);
+installPlugin(RUFFLE_EXTENSION);
+
+/******/ })()
+;</script><script charset="utf-8" src="chrome-extension://donbcfbmhbcapadipfkeojnmajbakjdc/dist/ruffle.js?id=86596698465"></script>
+<script type="text/javascript" src="./AppClientServer.js"></script><link type="text/css" rel="stylesheet" href="./LearningApps.css"><link type="text/css" rel="stylesheet" href="./bootstrap.css">
+<script type="text/javascript">/* <![CDATA[ */
+ var AppID = "przwpc08k20";
+ var AppClientLanguage = "DE";
+ var AppClient = new AppClientClass(AppID,false,0);
+/* ]]> */
+</script>
+
+  <link rel="stylesheet" href="./style(1).css">
+  <script type="text/javascript" src="./script.js"></script>
+</head>
+<body style="overflow-wrap: break-word; font-size: 25px;" data-new-gr-c-s-check-loaded="14.1114.0" data-gr-ext-installed="">
+ <div id="clusters" unselectable="on" style="width:100%;height:100%;position:absolute;z-index:1" class="totalClusters2"> 
+   <!-- all clusters will be appended here -->
+ <div class="cluster" style="top: 0%; left: 0%; width: 50%; height: 100%;"><div class="colorOverlay pinColor1"></div><div style="display:flex;height:100%;width:100%;pointer-events:none;justify-content:center;align-items:center"><img src="./u7bnttd7.png" alt="" style="max-width:90%;max-height:90%"></div></div><div class="cluster" style="top: 0%; left: 50%; width: 50%; height: 100%;"><div class="colorOverlay pinColor2"></div><div style="display:flex;height:100%;width:100%;pointer-events:none;justify-content:center;align-items:center"><img src="./pm04ggcv.png" alt="" style="max-width:90%;max-height:90%"></div></div></div>
+ <div id="cardsOverlay" unselectable="on" style="width:100%;height:100%;position:relative;z-index:2"> 
+   <!-- all cards will be appended here -->
+ <div id="checksolutionBtnPanel"><div id="checkSolutionBtn" onclick="AppClient.checkSolution()"><i class="glyphicon glyphicon-check"></i></div></div><div id="fadeblack" style="z-index: 1000;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><img src="./nd4gfib3.png" alt="" style="max-height: 261px;"></div><div class="card newcard" style="transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 605px; top: 126px; z-index: 1002;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><img src="./hjzk94wy.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Η εγκυμοσύνη οδηγεί σε αλλαγές ορμονών και μπορεί να οδηγήσει σε εμετό." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./6qfnlu2jwj.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span unselectable="on" class="resizeText" style="font-size: 1em; line-height: normal;">Tiefe Fissuren im Zahn </span></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Επαγγελματίας αρτοποιός" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./blktwfn8yz.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span unselectable="on" class="resizeText" style="font-size: 1em; line-height: normal;">Enge Zahnstellung
+(Verschachtelte Zähne)</span></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Τα κρυολογήματα οδηγούν σε χαμηλή σιελόρροια." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./3xpuxmmig6.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span unselectable="on" class="resizeText" style="font-size: 1em; line-height: normal;">Viele kleine Mahlzeiten am Tag</span></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Στοματική υγιεινή" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./s0ua4whadi.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Ορθοδοντική - Σε αυτήν την περίπτωση, τα στραβά  δόντια οδηγούνται στην ιδανική θέση." data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./766tza4vhz.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Regelmäßiger Zahnarztbesuch" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./v6dy3pbp.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span unselectable="on" class="resizeText" style="font-size: 1em; line-height: normal;">Weite Zahnstellung
+(Zahnlücken)</span></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Υψηλή σιελόρροια" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./px5jw8sa5q.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span class="hintbtn hintbtn_image popovers" data-container="#cardsOverlay" data-toggle="popover" data-placement="auto" data-content="Μάσημα τσίχλας χωρίς ζάχαρη" data-original-title="" title=""><span class="glyphicon glyphicon-info-sign infoicon"></span></span><img src="./37mdemxgsn.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><img src="./kjlgqpyd.png" alt="" style="max-height: 261px;"></div><div class="card" style="display: none; transform: translate3d(0px, 0px, 0px); cursor: move; touch-action: none; user-select: none; width: 302px; padding: 15px; left: 5px; top: 5px;"><div class="pin unset" style="border-radius: 30px; width: 30px; height: 30px; top: -20px; margin-left: -15px;"></div><span unselectable="on" class="resizeText" style="font-size: 1em; line-height: normal;">3 große Mahlzeiten am Tag</span></div></div>
+ <div id="usabilityHint" style="display: block;">
+  <img src="./One-Finger-Move.png" alt=""> 
+ </div>
+
+	
+<div id="AppClientLoadingPanel" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; box-sizing: border-box; z-index: 999999; background-color: rgb(255, 255, 255); display: none;"><table style="box-sizing:border-box; width:100%;height:100%"><tbody><tr><td width="100%" align="center" style="color:#333;font-family:Arial;" id="LoadingPanelContent"><img src="./loading.gif" alt="" style="vertical-align:middle;margin:5px"> <b> Loading ... </b></td></tr></tbody></table></div><div id="AppClientTaskPanel" style="box-sizing: border-box; font-family: Arial; position: absolute; left: 0px; top: 20%; max-height: 65%; overflow: auto; z-index: 999998; padding: 10px; border: 10px solid rgb(221, 221, 221); box-shadow: rgb(51, 51, 51) 0px 0px 10px; border-radius: 10px; background-color: rgb(255, 255, 255); width: 40%; margin-left: 30%; margin-right: 30%; display: none;"><p style="text-align:center;font-size:150%;padding:0px;margin:0px;margin-bottom:5px"><b>Aufgabe</b></p><div style="max-height:195px;overflow:auto;">Βάλτε τα παραδείγματα στη σωστή κατηγορία. Ποιοι παράγοντες ευνοούν τη φθορά των δοντιών και ποιοι αποτρέπουν τη φθορά των δοντιών; Σου εύχομαι επιτυχία!</div><div style="margin-top:10px;text-align:center"><button type="button" onclick="AppClient.closeTaskPanel()" style="font-size:120%;z-index: 2;position: relative;">OK</button></div></div><div id="AppClientTaskButton" style="position: fixed; width: 16px; left: 2px; top: 2px; z-index: 999997;"><a style="padding:0px; margin:0px; text-decoration:none; font-size:16px" href="JavaScript:AppClient.showTaskPanel()"><img border="0" style="vertical-align:top" src="./taskicon.gif" title="Aufgabe anzeigen" alt=""></a></div><div id="AppClientHelpButton" style="position: fixed; width: 16px; left: 22px; top: 2px; z-index: 999997; display: none;"><a style="padding:0px; margin:0px; text-decoration:none; font-size:16px" href="JavaScript:AppClient.showHelpPanel()"><img border="0" style="vertical-align:top" src="./helpicon.png" title="Hilfe anzeigen" alt=""></a></div><div id="AppClientFullscreenButton" style="position: fixed; width: 16px; right: 2px; top: 2px; z-index: 999997;"><a style="padding:0px; margin:0px; text-decoration:none; font-size:16px" href="https://learningapps.org/watch?v=przwpc08k20" onclick="return AppClient.doFullscreen()" target="_blank"><img border="0" style="vertical-align:top" src="./fullscreenicon.png" title="App im Vollbild anzeigen" alt=""></a></div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+  div.grammarly-desktop-integration {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+
+  div.grammarly-desktop-integration:before {
+    content: attr(data-content);
+  }
+</style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
